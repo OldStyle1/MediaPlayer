@@ -24,7 +24,7 @@ public class AudioFile {
 
     private String fileUrl; // URL файла или путь в системе
 
-    private Integer duration; // Продолжительность файла в секундах
+    private Long duration; // Продолжительность файла в секундах
 
     private LocalDateTime uploadDate; // Дата загрузки файла
 
@@ -53,7 +53,7 @@ public class AudioFile {
         this.id = id;
         this.title = fileName;
         this.fileUrl = fileType;
-        this.duration = Math.toIntExact(fileSize);
+        this.duration = fileSize;
     }
 
     public void setFileUrl(String fileUrl) {
@@ -68,7 +68,7 @@ public class AudioFile {
         this.uploadedBy = uploadedBy;
     }
 
-    public void setDuration(Integer duration) {
+    public void setDuration(Long duration) {
         this.duration = duration;
     }
 
@@ -86,5 +86,25 @@ public class AudioFile {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public Integer getPlaysCount() {
+        return playsCount;
+    }
+
+    public void setPlaysCount(Integer playsCount) {
+        this.playsCount = playsCount;
     }
 }

@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -23,13 +26,16 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id")
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     private Boolean active = true;
+
+    @ManyToMany(mappedBy = "favoritedBy")
+    private List<Playlist> favoritePlaylists = new ArrayList<>();
 
     // Конструктор по умолчанию
     public User() {
@@ -77,4 +83,42 @@ public class User {
     public Boolean getActive() {
         return active;
     }
+
+    // Метод для получения ролей
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    // Метод для установки всех ролей
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    // Метод для добавления одной роли
+    public void addRole(Role role) {
+        if (this.roles == null) {
+            this.roles = new HashSet<>();
+        }
+        this.roles.add(role);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    // Метод для удаления роли
+    public void removeRole(Role role) {
+        if (this.roles != null) {
+            this.roles.remove(role);
+        }
+    }
+
+    public List<Playlist> getFavoritePlaylists() {
+        return favoritePlaylists;
+    }
+
+    public void setFavoritePlaylists(List<Playlist> favoritePlaylists) {
+        this.favoritePlaylists = favoritePlaylists;
+    }
+
 }
