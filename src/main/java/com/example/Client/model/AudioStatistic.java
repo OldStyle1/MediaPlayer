@@ -30,4 +30,12 @@ public class AudioStatistic {
     protected void onCreate() {
         this.playDate = LocalDateTime.now();
     }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public void setAudioFile(AudioFile audioFile) {
+        this.audioFile = audioFile;
+    }
 }

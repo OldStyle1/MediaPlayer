@@ -5,15 +5,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.sns.SnsClient;
+
+import java.net.URI;
 
 @Configuration
 public class AwsConfig {
-
-    @Value("${aws.region}")
-    private String awsRegion;
+    private static final String ENDPOINT = "https://storage.yandexcloud.net";
 
     @Value("${aws.accessKey}")
     private String accessKey;
@@ -21,24 +21,18 @@ public class AwsConfig {
     @Value("${aws.secretKey}")
     private String secretKey;
 
-    private StaticCredentialsProvider createCredentialsProvider(){
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
-        return StaticCredentialsProvider.create(credentials);
-    }
+    @Value("${aws.region}")
+    private String region;
 
     @Bean
-    public S3Client s3Client(){
+    public S3Client s3Client() {
+        AwsBasicCredentials awsCredentials = AwsBasicCredentials.create(accessKey, secretKey);
+        
         return S3Client.builder()
-                .region(Region.of(awsRegion))
-                .credentialsProvider(createCredentialsProvider())
-                .build();
-    }
-
-    @Bean
-    public SnsClient snsClient(){
-        return SnsClient.builder()
-                .region(Region.of(awsRegion))
-                .credentialsProvider(createCredentialsProvider())
+                .httpClient(ApacheHttpClient.create())
+                .region(Region.of(region))
+                .endpointOverride(URI.create(ENDPOINT))
+                .credentialsProvider(StaticCredentialsProvider.create(awsCredentials))
                 .build();
     }
 }
